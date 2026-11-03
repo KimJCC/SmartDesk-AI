@@ -126,8 +126,8 @@ El sistema inicializa automáticamente una base de datos con cuentas demo para c
 | Rol | Correo Electrónico | Contraseña | Permisos Principales |
 |-----|--------------------|------------|----------------------|
 | **Administrador** | `admin@smartdesk.gt` | `admin123` | Panel global, reasignación, gestión de personal (altas/bajas) |
-| **Técnico TI** | `carlos@smartdesk.gt` | `tec123` | Gestión de tickets asignados, cambio de estado, sugerencias N2 |
-| **Técnico TI** | `maria@smartdesk.gt` | `tec123` | Gestión de tickets asignados, cambio de estado, sugerencias N2 |
+| **Técnico TI** | `carlos@smartdesk.gt` | `tec123` | Gestión de tickets asignados, cambio de estado, sugerencias AI |
+| **Técnico TI** | `maria@smartdesk.gt` | `tec123` | Gestión de tickets asignados, cambio de estado, sugerencias AI |
 | **Solicitante** | `kimberly@smartdesk.gt` | `user123` | Registro de incidentes, seguimiento de estado y técnico |
  
 > **Nota:** la interfaz de login cuenta además con botones de acceso rápido de un solo clic para alternar entre roles.
