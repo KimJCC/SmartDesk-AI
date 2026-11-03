@@ -100,7 +100,7 @@ pip install -r requirements.txt
  
 ### 4. Configurar las variables de entorno
  
-Crea un archivo llamado `.env` en la raíz del proyecto tomando como base el archivo `.env.example`:
+Crea un archivo llamado `.env` en la raíz del proyecto y agrega lo siguiente:
  
 ```env
 GEMINI_API_KEY=tu_api_key_de_google_aqui
@@ -119,7 +119,7 @@ La aplicación web se ejecutará en: **http://127.0.0.1:8000**
  
 ---
  
-## 🔑 Credenciales de Acceso para Pruebas
+## Credenciales de Acceso para Pruebas
  
 El sistema inicializa automáticamente una base de datos con cuentas demo para cada rol:
  
