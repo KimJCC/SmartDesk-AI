@@ -1,6 +1,6 @@
 # SmartDesk AI — Plataforma Inteligente de Mesa de Ayuda TI
  
-> **Proyecto Final — Análisis de Sistemas II (Código: 037)**  
+> **Proyecto Final — Análisis de Sistemas II **  
 > **Universidad Mariano Gálvez de Guatemala**  
 > Facultad de Ingeniería en Sistemas de Información y Ciencias de la Computación  
  
