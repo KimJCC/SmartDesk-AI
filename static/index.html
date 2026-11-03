@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartDesk AI | Mesa de Ayuda Inteligente</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { background-color: #eef2f7; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+        .badge-Critica { background-color: #dc3545; color: white; }
+        .badge-Alta { background-color: #fd7e14; color: white; }
+        .badge-Media { background-color: #ffc107; color: #212529; }
+        .badge-Baja { background-color: #198754; color: white; }
+        
+        .sugerencia-box { font-size: 0.84rem; line-height: 1.45; }
+        .sugerencia-colapsada { max-height: 52px; overflow: hidden; position: relative; }
+        .btn-toggle-ver { font-size: 0.75rem; text-decoration: none; padding: 0; }
+        .login-card { border-radius: 16px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body>
+
+<!-- ================= INICIO DE SESIÓN ================= -->
+<div id="seccionLogin" class="container py-5">
+    <div class="row justify-content-center align-items-center min-vh-75 pt-3">
+        <div class="col-md-6 col-lg-5">
+            <div class="card login-card p-4 p-md-5 bg-white">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex p-3 bg-primary bg-opacity-10 text-primary rounded-circle mb-3">
+                        <i class="bi bi-robot fs-1"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark mb-1">SmartDesk AI</h3>
+                    <p class="text-muted small">Gestión Inteligente de Problemas TI</p>
+                </div>
+
+                <form id="formLogin">
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-secondary">Correo Institucional</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
+                            <input type="email" id="loginEmail" class="form-control border-start-0" placeholder="usuario@smartdesk.gt" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold text-secondary">Contraseña</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock text-muted"></i></span>
+                            <input type="password" id="loginPassword" class="form-control border-start-0" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    <button type="submit" id="btnLogin" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
+                        Iniciar Sesión
+                    </button>
+                </form>
+
+                <div class="mt-4 pt-3 border-top">
+                    <p class="text-center text-muted small mb-2 fw-semibold">Pruebas:</p>
+                    <div class="d-grid gap-2 d-flex justify-content-center flex-wrap">
+                        <button class="btn btn-outline-danger btn-sm" onclick="completarLogin('admin@smartdesk.gt', 'admin123')">
+                            <i class="bi bi-shield-lock"></i> Admin
+                        </button>
+                        <button class="btn btn-outline-warning text-dark btn-sm" onclick="completarLogin('carlos@smartdesk.gt', 'tec123')">
+                            <i class="bi bi-tools"></i> Técnico Carlos
+                        </button>
+                        <button class="btn btn-outline-info text-dark btn-sm" onclick="completarLogin('maria@smartdesk.gt', 'tec123')">
+                            <i class="bi bi-tools"></i> Técnica María
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="completarLogin('kimberly@smartdesk.gt', 'user123')">
+                            <i class="bi bi-person"></i> Solicitante
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================= PANEL PRINCIPAL ================= -->
+<div id="seccionApp" class="d-none">
+    <nav class="navbar navbar-expand navbar-dark bg-dark px-4 py-2 mb-4 shadow-sm">
+        <span class="navbar-brand fw-bold d-flex align-items-center gap-2">
+            <i class="bi bi-cpu-fill text-primary"></i> SmartDesk AI
+        </span>
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <!-- Botón exclusivo para Admin -->
+            <button id="btnGestionPersonal" class="btn btn-sm btn-outline-info d-none d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalPersonal" onclick="cargarListaPersonal()">
+                <i class="bi bi-people-fill"></i> Gestionar Personal
+            </button>
+            <span class="text-light small">
+                <i class="bi bi-person-circle me-1"></i>
+                <span id="navUsuarioNombre" class="fw-bold"></span> 
+                (<span id="navUsuarioRol" class="badge bg-primary"></span>)
+            </span>
+            <button class="btn btn-sm btn-outline-light d-flex align-items-center gap-1" onclick="cerrarSesion()">
+                <i class="bi bi-box-arrow-right"></i> Salir
+            </button>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4 pb-5">
+        <div class="row g-4">
+            
+            <!-- Panel de Registro (Solicitante) -->
+            <div id="panelRegistro" class="col-lg-3">
+                <div class="card card-custom">
+                    <div class="card-header bg-primary text-white fw-bold py-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-plus-circle"></i> Nuevo Incidente TI
+                    </div>
+                    <div class="card-body">
+                        <form id="formCrearTicket">
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold">Asunto del Problema</label>
+                                <input type="text" id="ticketAsunto" class="form-control form-control-sm" placeholder="Ej. Switch sin enlace en rack" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold">Descripción Detallada</label>
+                                <textarea id="ticketDescripcion" class="form-control form-control-sm" rows="5" placeholder="Detalla el problema técnico..." required></textarea>
+                            </div>
+                            <button type="submit" id="btnCrearTicket" class="btn btn-primary btn-sm w-100 fw-bold py-2 shadow-sm">
+                                <i class="bi bi-stars"></i> Enviar y Auto-Enrutar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel de Tabla de Incidentes y Filtros -->
+            <div id="panelTabla" class="col-lg-9">
+                <div class="card card-custom">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-md-3">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                    <input type="text" id="filtroTexto" class="form-control border-start-0" placeholder="Asunto o solicitante...">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <select id="filtroPrioridad" class="form-select form-select-sm">
+                                    <option value="">Prioridades</option>
+                                    <option value="Crítica">Crítica</option>
+                                    <option value="Alta">Alta</option>
+                                    <option value="Media">Media</option>
+                                    <option value="Baja">Baja</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select id="filtroEstado" class="form-select form-select-sm">
+                                    <option value="">Estados</option>
+                                    <option value="Abierto">Abierto</option>
+                                    <option value="En Proceso">En Proceso</option>
+                                    <option value="Resuelto">Resuelto</option>
+                                </select>
+                            </div>
+                            <!-- Nuevo filtro dinámico por técnico -->
+                            <div class="col-md-3">
+                                <select id="filtroTecnico" class="form-select form-select-sm">
+                                    <option value="">Todos los Técnicos</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <button class="btn btn-sm btn-outline-secondary w-100" onclick="cargarTickets()">
+                                    <i class="bi bi-arrow-clockwise"></i> Actualizar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 45px;">#</th>
+                                        <th>Incidente / Solicitante</th>
+                                        <th>Categoría</th>
+                                        <th>Prioridad IA</th>
+                                        <th style="width: 32%;">Sugerencia IA</th>
+                                        <th style="width: 160px;">Técnico Responsable</th>
+                                        <th style="width: 125px;">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyTickets">
+                                    <tr><td colspan="7" class="text-center py-4 text-muted">Cargando incidentes...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ================= MODAL DE GESTIÓN DE PERSONAL (ADMIN) ================= -->
+<div class="modal fade" id="modalPersonal" tabindex="-1" aria-labelledby="modalPersonalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title fw-bold" id="modalPersonalLabel"><i class="bi bi-people-fill me-2"></i>Gestión de Personal y Roles</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <!-- Formulario de Nuevo Usuario -->
+                <div class="card bg-light border-0 p-3 mb-4">
+                    <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-person-plus-fill me-1 text-primary"></i> Registrar Nuevo Integrante</h6>
+                    <form id="formNuevoUsuario" class="row g-2">
+                        <div class="col-md-4">
+                            <input type="text" id="nuevoNombre" class="form-control form-control-sm" placeholder="Nombre completo" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="email" id="nuevoEmail" class="form-control form-control-sm" placeholder="correo@smartdesk.gt" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="password" id="nuevoPassword" class="form-control form-control-sm" placeholder="Contraseña" required>
+                        </div>
+                        <div class="col-md-8">
+                            <select id="nuevoRol" class="form-select form-select-sm" required>
+                                <option value="" disabled selected>Seleccionar un Rol...</option>
+                                <option value="TECNICO">🔧 TÉCNICO</option>
+                                <option value="SOLICITANTE">👤 SOLICITANTE</option>
+                                <option value="ADMIN">🛡️ ADMINISTRADOR</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" id="btnGuardarUsuario" class="btn btn-primary btn-sm w-100 fw-bold">
+                                <i class="bi bi-check-circle"></i> Guardar Usuario
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tabla de Personal -->
+                <h6 class="fw-bold mb-2 text-dark">Usuarios Registrados en el Sistema</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered align-middle">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Rol Asignado</th>
+                                <th class="text-center" style="width: 80px;">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyPersonal">
+                            <tr><td colspan="5" class="text-center py-2 text-muted">Cargando personal...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
